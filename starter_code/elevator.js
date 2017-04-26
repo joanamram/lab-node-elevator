@@ -16,8 +16,27 @@ class Elevator {
 
 
     update () {
-      log();
+      this.log();
+      let person = this.passengers;
+      if (this.requests.length > 0) {
+        if (this.requests[0] < this.floor) {
+          this.floorDown();
+        }else if (this.requests[0] > this.floor) {
+          this.floorUp();
+        }else if (this.requests[0] == this.floor) {
+          this._passengersLeave(person[0]);}
+        }else
+      if (this.waitingList.length > 0 ) {
+        if (this.waitingList[0].originFloor> this.floor) {
+          this.floorUp();
+        }else if (this.waitingList[0].originFloor< this.floor) {
+          this.floorDown();
+        }else if (this.waitingList[0].originFloor == this.floor) {
+          this._passengersEnter(this.waitingList[0]);
+        }
+      }
     }
+
 
     start(){
       this.timer = setInterval(() => update(),1000);
@@ -28,17 +47,17 @@ class Elevator {
     }
 
 
-    floorUp() {
+    floorDown() {
       if(this.floor < 10){
       this.floor += 1;
-      this.direction ="up";
+      this.direction ="down";
       }
     }
 
-    floorDown() {
+    floorUp() {
       if(this.floor > 0){
       this.floor -= 1;
-      this.direction ="down";
+      this.direction ="up";
       }
     }
 
@@ -48,18 +67,21 @@ class Elevator {
     }
 
     _passengersEnter(passenger) {
-      if(this.waitingList.length > 0){
-        this.passengers.push(passenger);
-        this.waitingList.pop(passenger);
-        this.requests.push(destinationFloor);
-      } console.log("Julia has enteres the elevator");
+      let passengerPosition = this.waitingList.indexOf(person);
+      this.waitingList.splice(passengerPosition, 1);
+      this.requests.push(person.destinationFloor);
+      this.passengers.push(person);
+      let message = `${person.name} has entered the elevator`;
+    } console.log(message);
     }
 
 
     _passengersLeave(passenger) {
-      if(destinationFloor === originFloor){
-        this.passengers.pop(passenger);
-      } console.log("Julia has left the elevator");
+      let passengerPosition = this.passengers.indexOf(person);
+      this.passengers.splice(passengerPosition,1);
+      this.requests.splice(0,1);
+      let message = `${person.name} has left the elevator`;
+      console.log(message);
     }
 
 }
